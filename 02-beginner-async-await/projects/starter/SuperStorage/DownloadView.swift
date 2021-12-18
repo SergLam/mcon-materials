@@ -51,9 +51,21 @@ struct DownloadView: View {
         isDownloadActive: $isDownloadActive,
         downloadSingleAction: {
           // Download a file in a single go.
+          Task {
+           fileData = try await model.download(file: file)
+          }
         },
         downloadWithUpdatesAction: {
           // Download a file with UI progress updates.
+          isDownloadActive = true
+          Task {
+            do {
+              fileData = try await model.downloadWithProgress(file: file)
+            } catch {
+              
+            }
+            isDownloadActive = false
+          }
         },
         downloadMultipleAction: {
           // Download a file in multiple concurrent parts.
@@ -75,5 +87,10 @@ struct DownloadView: View {
       }, label: { Text("Cancel All") })
         .disabled(model.downloads.isEmpty)
     })
+    .onDisappear {
+      fileData = nil
+      isDownloadActive = false
+      model.reset()
+    }
   }
 }

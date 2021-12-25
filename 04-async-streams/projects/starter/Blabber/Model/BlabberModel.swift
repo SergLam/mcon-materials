@@ -37,41 +37,84 @@ import UIKit
 
 /// The app model that communicates with the server.
 class BlabberModel: ObservableObject {
+  
   var username = ""
   var urlSession = URLSession.shared
-
+  
+  private let decoder: JSONDecoder = JSONDecoder()
+  
   init() {
   }
-
+  
   /// Current live updates
   @Published var messages: [Message] = []
-
+  
   /// Shares the current user's address in chat.
   func shareLocation() async throws {
   }
-
+  
   /// Does a countdown and sends the message.
   func countdown(to message: String) async throws {
     guard !message.isEmpty else { return }
-  }
+    var countdown = 3
+    let counter = AsyncStream<String> {
+      do {
+        try await Task.sleep(nanoseconds: 1_000_000_000)
+      } catch {
+        return nil
+      }
 
+      defer {
+        countdown -= 1
+      }
+
+      switch countdown {
+      case (1...):
+        return "\(countdown)..."
+      case 0:
+        return "🎉 " + message
+      default:
+        return nil
+      }
+    }
+    
+    try await counter.forEach { [weak self] in
+      try await self?.say($0)
+    }
+  }
+  
+  func observeAppStatus() async {
+    Task {
+      let notification = await UIApplication.willResignActiveNotification
+      for await _ in NotificationCenter.default.notifications(for: notification) {
+        try? await say("\(username) went away", isSystemMessage: true)
+      }
+    }
+    Task {
+      let notification = await UIApplication.didBecomeActiveNotification
+      for await _ in NotificationCenter.default.notifications(for: notification) {
+        try? await say("\(username) came back", isSystemMessage: true)
+      }
+    }
+  }
+  
   /// Start live chat updates
   @MainActor
   func chat() async throws {
     guard
       let query = username.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed),
       let url = URL(string: "http://localhost:8080/chat/room?\(query)")
-      else {
+    else {
       throw "Invalid username"
     }
-
+    
     let (stream, response) = try await liveURLSession.bytes(from: url, delegate: nil)
     guard (response as? HTTPURLResponse)?.statusCode == 200 else {
       throw "The server responded with an error."
     }
-
+    
     print("Start live updates")
-
+    
     try await withTaskCancellationHandler {
       print("End live updates")
       messages = []
@@ -79,31 +122,55 @@ class BlabberModel: ObservableObject {
       try await readMessages(stream: stream)
     }
   }
-
+  
   /// Reads the server chat stream and updates the data model.
   @MainActor
   private func readMessages(stream: URLSession.AsyncBytes) async throws {
+    var iterator = stream.lines.makeAsyncIterator()
+    guard let first = try await iterator.next() else {
+      throw "No response from server"
+    }
+    guard let data = first.data(using: .utf8), let status = try? decoder.decode(ServerStatus.self, from: data) else {
+      throw "Invalid response from server"
+    }
+    messages.append(
+      Message(
+        message: "\(status.activeUsers) active users"
+      )
+    )
+    let notifications = Task {
+      await observeAppStatus()
+    }
+    defer {
+      notifications.cancel()
+    }
+    for try await line in stream.lines {
+      if let data = line.data(using: .utf8),
+         let update = try? decoder.decode(Message.self, from: data) {
+        messages.append(update)
+      }
+    }
   }
-
+  
   /// Sends the user's message to the chat server
   func say(_ text: String, isSystemMessage: Bool = false) async throws {
     guard
       !text.isEmpty,
       let url = URL(string: "http://localhost:8080/chat/say")
     else { return }
-
+    
     var request = URLRequest(url: url)
     request.httpMethod = "POST"
     request.httpBody = try JSONEncoder().encode(
       Message(id: UUID(), user: isSystemMessage ? nil : username, message: text, date: Date())
     )
-
+    
     let (_, response) = try await urlSession.data(for: request, delegate: nil)
     guard (response as? HTTPURLResponse)?.statusCode == 200 else {
       throw "The server responded with an error."
     }
   }
-
+  
   /// A URL session that goes on indefinitely, receiving live updates.
   private var liveURLSession: URLSession = {
     var configuration = URLSessionConfiguration.default

@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		9C1B549326D7611200CE4F70 /* NotificationCenter+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C1B549226D7611200CE4F70 /* NotificationCenter+.swift */; };
+		9C1B549326D7611200CE4F70 /* NotificationCenter+AsyncStream.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C1B549226D7611200CE4F70 /* NotificationCenter+AsyncStream.swift */; };
 		9C1B549526D7626100CE4F70 /* Utilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C1B549426D7626100CE4F70 /* Utilities.swift */; };
 		9C22D31D26D6A0F200983935 /* BlabberTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C22D31C26D6A0F200983935 /* BlabberTests.swift */; };
 		9C22D32526D6C55600983935 /* InputStream+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C22D32426D6C55600983935 /* InputStream+.swift */; };
@@ -37,7 +37,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		9C1B549226D7611200CE4F70 /* NotificationCenter+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NotificationCenter+.swift"; sourceTree = "<group>"; };
+		9C1B549226D7611200CE4F70 /* NotificationCenter+AsyncStream.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NotificationCenter+AsyncStream.swift"; sourceTree = "<group>"; };
 		9C1B549426D7626100CE4F70 /* Utilities.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Utilities.swift; sourceTree = "<group>"; };
 		9C22D31A26D6A0F200983935 /* BlabberTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = BlabberTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		9C22D31C26D6A0F200983935 /* BlabberTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlabberTests.swift; sourceTree = "<group>"; };
@@ -162,7 +162,7 @@
 			children = (
 				9CCA913926BF95A800066CF6 /* AddressEncoder.swift */,
 				9C67694126D56DA700502FA3 /* ChatLocationDelegate.swift */,
-				9C1B549226D7611200CE4F70 /* NotificationCenter+.swift */,
+				9C1B549226D7611200CE4F70 /* NotificationCenter+AsyncStream.swift */,
 				9C1B549426D7626100CE4F70 /* Utilities.swift */,
 			);
 			path = Utility;
@@ -314,7 +314,7 @@
 				9C67694226D56DA700502FA3 /* ChatLocationDelegate.swift in Sources */,
 				9C6C0FD826BE532800DD99B3 /* BlabberApp.swift in Sources */,
 				9CCA913A26BF95A800066CF6 /* AddressEncoder.swift in Sources */,
-				9C1B549326D7611200CE4F70 /* NotificationCenter+.swift in Sources */,
+				9C1B549326D7611200CE4F70 /* NotificationCenter+AsyncStream.swift in Sources */,
 				9CE044E826C29EBD00BDF5AF /* DataModels.swift in Sources */,
 				9C6C0FE826BE609600DD99B3 /* LoginView.swift in Sources */,
 				9CE044EA26C29EE100BDF5AF /* MessageView.swift in Sources */,

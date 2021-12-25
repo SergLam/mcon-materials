@@ -57,7 +57,7 @@ class BlabberModel: ObservableObject {
   func countdown(to message: String) async throws {
     guard !message.isEmpty else { return }
     var countdown = 3
-    let counter = AsyncStream<String> {
+    let counter = AsyncStream<String>{
       do {
         try await Task.sleep(nanoseconds: 1_000_000_000)
       } catch {
@@ -76,6 +76,9 @@ class BlabberModel: ObservableObject {
       default:
         return nil
       }
+    } onCancel: {
+      // https://developer.apple.com/documentation/swift/asyncstream/3856682-init
+      @Sendable () in print ("Countdown Canceled.")
     }
     
     try await counter.forEach { [weak self] in

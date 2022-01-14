@@ -37,6 +37,9 @@ import UIKit
 
 /// The app model that communicates with the server.
 class BlabberModel: ObservableObject {
+  
+  static var sleep: (UInt64) async throws -> Void = Task.sleep(nanoseconds:)
+  
   var username = ""
   var urlSession = URLSession.shared
 
@@ -80,11 +83,12 @@ class BlabberModel: ObservableObject {
 
   /// Does a countdown and sends the message.
   func countdown(to message: String) async throws {
+    let sleep = BlabberModel.sleep
     guard !message.isEmpty else { return }
     var countdown = 3
     let counter = AsyncStream<String> {
       do {
-        try await Task.sleep(nanoseconds: 1_000_000_000)
+        try await sleep(1_000_000_000)
       } catch {
         return nil
       }

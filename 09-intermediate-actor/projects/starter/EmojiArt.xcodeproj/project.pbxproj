@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		04921EEC2793571F002AE7F0 /* ImageDatabase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04921EEB2793571F002AE7F0 /* ImageDatabase.swift */; };
 		1839F4B025190F2A00BB00F1 /* AppMain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1839F4AF25190F2A00BB00F1 /* AppMain.swift */; };
 		18D775C522AD944300AE281E /* LoadingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18D775C422AD944300AE281E /* LoadingView.swift */; };
 		18D775C722AD944400AE281E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 18D775C622AD944400AE281E /* Assets.xcassets */; };
@@ -26,6 +27,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		04921EEB2793571F002AE7F0 /* ImageDatabase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageDatabase.swift; sourceTree = "<group>"; };
 		1839F4AF25190F2A00BB00F1 /* AppMain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppMain.swift; sourceTree = "<group>"; };
 		18D775BD22AD944300AE281E /* EmojiArt.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = EmojiArt.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		18D775C422AD944300AE281E /* LoadingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingView.swift; sourceTree = "<group>"; };
@@ -100,6 +102,7 @@
 			isa = PBXGroup;
 			children = (
 				9CD905E52701BCCB00D77741 /* DiskStorage.swift */,
+				04921EEB2793571F002AE7F0 /* ImageDatabase.swift */,
 			);
 			path = Database;
 			sourceTree = "<group>";
@@ -240,6 +243,7 @@
 				9CD905E62701BCCB00D77741 /* DiskStorage.swift in Sources */,
 				9C11323526FF73CB00571AB3 /* Checksum.swift in Sources */,
 				1839F4B025190F2A00BB00F1 /* AppMain.swift in Sources */,
+				04921EEC2793571F002AE7F0 /* ImageDatabase.swift in Sources */,
 				9C8AFE1726FCDBA600EC76D3 /* EmojiArtModel.swift in Sources */,
 				9C659CD52700FDF90048C168 /* ThumbImage.swift in Sources */,
 				9C55E79D27018D8200C0DF06 /* BottomToolbar.swift in Sources */,

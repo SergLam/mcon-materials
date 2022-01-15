@@ -39,6 +39,7 @@ actor ImageLoader: ObservableObject {
     case failed
   }
   
+  // MARK: -  In memory access counter
   @MainActor private(set) var inMemoryAccess: AsyncStream<Int>?
   
   private var inMemoryAcccessContinuation: AsyncStream<Int>.Continuation?
@@ -51,6 +52,7 @@ actor ImageLoader: ObservableObject {
   
   private(set) var cache: [String: DownloadState] = [:]
   
+  // MARK: - Life cycle
   deinit {
     inMemoryAcccessContinuation?.finish()
   }
@@ -62,6 +64,7 @@ actor ImageLoader: ObservableObject {
     await MainActor.run { inMemoryAccess = accessStream }
   }
   
+  // MARK: - Public functions
   func add(_ image: UIImage, forKey key: String) {
     cache[key] = .completed(image)
   }

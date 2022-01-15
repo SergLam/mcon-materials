@@ -40,12 +40,31 @@ import UIKit
   private var storage: DiskStorage!
   private var storedImagesIndex: [String] = []
   
+  // MARK: - From disk access counter
+  @MainActor private(set) var onDiskAccess: AsyncStream<Int>?
+
+  private var onDiskAccessCounter = 0 {
+    didSet {
+      onDiskAcccessContinuation?.yield(onDiskAccessCounter)
+    }
+  }
+  private var onDiskAcccessContinuation: AsyncStream<Int>.Continuation?
+  
+  // MARK: - Life cycle
+  deinit {
+    onDiskAcccessContinuation?.finish()
+  }
+  
   func setUp() async throws {
     await imageLoader.setUp()
     storage = await DiskStorage()
     for fileURL in try await storage.persistedFiles() {
       storedImagesIndex.append(fileURL.lastPathComponent)
     }
+    let accessStream = AsyncStream<Int> { continuation in
+      onDiskAcccessContinuation = continuation
+    }
+    await MainActor.run { self.onDiskAccess = accessStream }
   }
   
   func clear() async {
@@ -53,6 +72,7 @@ import UIKit
       try? await storage.remove(name: name)
     }
     storedImagesIndex.removeAll()
+    onDiskAccessCounter = 0
   }
   
   func clearInMemoryAssets() async {
@@ -77,7 +97,8 @@ import UIKit
       
     } else {
       
-      do { // 1
+      do {
+        // 1
         let fileName = DiskStorage.fileName(for: key)
         if !storedImagesIndex.contains(fileName) {
           throw "Image not persisted"
@@ -88,6 +109,7 @@ import UIKit
           throw "Invalid image data"
         }
         print("Cached on disk")
+        onDiskAccessCounter += 1
         // 3
         await imageLoader.add(image, forKey: key)
         return image

@@ -68,6 +68,14 @@ import Foundation
   func remove(name: String) throws {
     try FileManager.default.removeItem(at: folder.appendingPathComponent(name))
   }
+  
+  func removeAllFiles() throws {
+    let filesUrls = try persistedFiles()
+    for fileURL in filesUrls {
+      try FileManager.default.removeItem(at: fileURL)
+      print("File deleted \(fileURL.lastPathComponent)")
+    }
+  }
 
   func persistedFiles() throws -> [URL] {
     var result: [URL] = []

@@ -103,7 +103,7 @@ struct ListView: View {
       .onChange(of: selected) { newValue in
         isDisplayingPreview = newValue != nil
       }
-
+      .environmentObject(ImageLoader())
       BottomToolbar()
     }
   }

@@ -35,7 +35,7 @@ import Combine
 
 struct LoadingView: View {
   @EnvironmentObject var model: EmojiArtModel
-
+  
   /// The latest error message.
   @State var lastErrorMessage = "None" {
     didSet {
@@ -44,18 +44,18 @@ struct LoadingView: View {
   }
   @State var isDisplayingError = false
   @State var progress = 0.0
-
+  
   @Binding var isVerified: Bool
-
+  
   let timer = Timer.publish(every: 0.2, on: .main, in: .common)
     .autoconnect()
-
+  
   var body: some View {
     VStack(spacing: 4) {
       ProgressView("Verifying feed", value: progress)
         .tint(.gray)
         .font(.subheadline)
-
+      
       if !model.imageFeed.isEmpty {
         Text("\(Int(progress * 100))%")
           .fontWeight(.bold)
@@ -68,7 +68,10 @@ struct LoadingView: View {
       guard model.imageFeed.isEmpty else { return }
       Task {
         do {
-          try await model.loadImages()
+          try await model.verifyImages()
+          withAnimation {
+            isVerified = true
+          }
         } catch {
           lastErrorMessage = error.localizedDescription
         }
@@ -79,5 +82,12 @@ struct LoadingView: View {
     }, message: {
       Text(lastErrorMessage)
     })
+    .onReceive(timer) { _ in
+      guard !model.imageFeed.isEmpty else { return }
+      Task {
+        progress = await Double(model.verifiedCount) /
+        Double(model.imageFeed.count)
+      }
+    }
   }
 }
